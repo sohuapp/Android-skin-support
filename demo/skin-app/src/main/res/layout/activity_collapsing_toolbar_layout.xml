@@ -69,21 +69,21 @@
         app:behavior_overlapTop="30dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/text_background"
-            app:cardElevation="8dp"
-            app:contentPadding="16dp">
+        <!--<android.support.v7.widget.CardView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="8dp"-->
+            <!--app:cardBackgroundColor="@color/text_background"-->
+            <!--app:cardElevation="8dp"-->
+            <!--app:contentPadding="16dp">-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="8dp"
-                android:textColor="@color/text_color"
-                android:text="@string/person_intro" />
-        </android.support.v7.widget.CardView>
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:lineSpacingExtra="8dp"-->
+                <!--android:textColor="@color/text_color"-->
+                <!--android:text="@string/person_intro" />-->
+        <!--</android.support.v7.widget.CardView>-->
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.v7.widget.Toolbar

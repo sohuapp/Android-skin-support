@@ -1,12 +1,7 @@
 package skin.support.widget;
 
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -52,7 +47,7 @@ public class SkinCompatBackgroundHelper extends SkinCompatHelper {
         }
         Drawable drawable = SkinCompatResources.getInstance().getDrawable(mBackgroundResId);
         if (drawable != null) {
-            ViewCompat.setBackground(mView, drawable);
+            mView.setBackgroundDrawable(drawable);
         }
     }
 }

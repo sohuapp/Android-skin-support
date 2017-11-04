@@ -1,17 +1,15 @@
 package skin.support.widget;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.RequiresApi;
 import android.support.v7.appcompat.R;
-import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+import android.widget.Button;
 
 /**
  * Created by ximsfei on 17-1-11.
  */
-public class SkinCompatButton extends AppCompatButton implements SkinCompatSupportable {
+public class SkinCompatButton extends Button implements SkinCompatSupportable {
     private SkinCompatTextHelper mTextHelper;
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
 

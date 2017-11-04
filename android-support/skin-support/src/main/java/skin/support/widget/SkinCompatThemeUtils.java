@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
@@ -39,7 +38,7 @@ public class SkinCompatThemeUtils {
         return getResId(context, new int[]{android.R.attr.textColorPrimary});
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int getStatusBarColorResId(Context context) {
         return getResId(context, new int[]{android.R.attr.statusBarColor});
     }

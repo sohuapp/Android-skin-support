@@ -14,7 +14,6 @@ import android.graphics.drawable.shapes.RoundRectShape;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
 import android.support.v4.graphics.drawable.DrawableWrapper;
-import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.ProgressBar;
@@ -139,7 +138,7 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
             mView.setIndeterminateDrawable(tileifyIndeterminate(drawable));
         }
 
-        mProgressDrawableResId = checkProgressDrawableResId(mProgressDrawableResId);
+        mProgressDrawableResId = checkResourceId(mProgressDrawableResId);
         if (mProgressDrawableResId != INVALID_ID) {
             Drawable drawable = SkinCompatResources.getInstance().getDrawable(mProgressDrawableResId);
             mView.setProgressDrawable(tileify(drawable, false));
@@ -150,12 +149,5 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
                 mView.setIndeterminateTintList(SkinCompatResources.getInstance().getColorStateList(mIndeterminateTintResId));
             }
         }
-    }
-
-    private int checkProgressDrawableResId(int mProgressDrawableResId) {
-        if (mProgressDrawableResId == R.drawable.abc_ratingbar_material) {
-            return INVALID_ID;
-        }
-        return checkResourceId(mProgressDrawableResId);
     }
 }

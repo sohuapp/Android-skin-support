@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ import skin.support.content.res.SkinCompatResources;
  * Created by pengfengwang on 2017/3/8.
  */
 
-@RequiresApi(17)
 @TargetApi(17)
 public class SkinCompatTextHelperV17 extends SkinCompatTextHelper {
     private int mDrawableStartResId = INVALID_ID;

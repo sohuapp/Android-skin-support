@@ -6,7 +6,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.VectorEnabledTintResources;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewParent;
@@ -15,7 +14,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import skin.support.utils.SkinLog;
 import skin.support.widget.SkinCompatSupportable;
 
 /**
@@ -58,8 +56,7 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
 
         return mSkinCompatViewInflater.createView(parent, name, context, attrs, inheritContext,
                 isPre21, /* Only read android:theme pre-L (L+ handles this anyway) */
-                true, /* Read read app:theme as a fallback at all times for legacy reasons */
-                VectorEnabledTintResources.shouldBeUsed() /* Only tint wrap the context if enabled */
+                true /* Read read app:theme as a fallback at all times for legacy reasons */
         );
     }
 
@@ -97,7 +94,6 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
 
     public void applySkin() {
         if (mSkinHelpers != null && !mSkinHelpers.isEmpty()) {
-            SkinLog.d("size - " + mSkinHelpers.size());
             for (WeakReference ref : mSkinHelpers) {
                 if (ref != null && ref.get() != null) {
                     ((SkinCompatSupportable) ref.get()).applySkin();

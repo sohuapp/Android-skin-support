@@ -13,18 +13,18 @@
     <style name="AppTheme" parent="BaseAppTheme" />
 
     <style name="AlertDialogTheme" parent="BaseAppTheme">
-        <item name="alertDialogStyle">@style/AlertDialog.SkinCompat</item>
-        <item name="skinAlertDialogBackground">@color/background</item>
-        <item name="skinAlertDialogTitleTextColor">@color/text_color</item>
-        <item name="skinAlertDialogMessageTextColor">@color/text_color</item>
-        <item name="skinAlertDialogNeutralButtonTextColor">@color/text_color</item>
-        <item name="skinAlertDialogNegativeButtonTextColor">@color/text_color</item>
-        <item name="skinAlertDialogPositiveButtonTextColor">@color/text_color_tip</item>
-        <item name="skinAlertDialogControlHighlightColor">@color/colorAccent</item>
-        <item name="skinAlertDialogListDivider">@null</item>
-        <item name="skinAlertDialogListItemTextColor">@color/text_color</item>
-        <item name="skinListChoiceIndicatorMultiple">@drawable/skin_btn_check</item>
-        <item name="skinListChoiceIndicatorSingle">@drawable/skin_btn_radio</item>
+        <!--<item name="alertDialogStyle">@style/AlertDialog.SkinCompat</item>-->
+        <!--<item name="skinAlertDialogBackground">@color/background</item>-->
+        <!--<item name="skinAlertDialogTitleTextColor">@color/text_color</item>-->
+        <!--<item name="skinAlertDialogMessageTextColor">@color/text_color</item>-->
+        <!--<item name="skinAlertDialogNeutralButtonTextColor">@color/text_color</item>-->
+        <!--<item name="skinAlertDialogNegativeButtonTextColor">@color/text_color</item>-->
+        <!--<item name="skinAlertDialogPositiveButtonTextColor">@color/text_color_tip</item>-->
+        <!--<item name="skinAlertDialogControlHighlightColor">@color/colorAccent</item>-->
+        <!--<item name="skinAlertDialogListDivider">@null</item>-->
+        <!--<item name="skinAlertDialogListItemTextColor">@color/text_color</item>-->
+        <!--<item name="skinListChoiceIndicatorMultiple">@drawable/skin_btn_check</item>-->
+        <!--<item name="skinListChoiceIndicatorSingle">@drawable/skin_btn_radio</item>-->
     </style>
 
     <style name="MaterialDesignTheme" parent="BaseAppTheme">

@@ -2,6 +2,7 @@ package skin.support.design.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.TintTypedArray;
@@ -13,7 +14,6 @@ import java.lang.reflect.Method;
 
 import skin.support.content.res.SkinCompatResources;
 import skin.support.design.R;
-import skin.support.utils.SkinLog;
 import skin.support.widget.SkinCompatBackgroundHelper;
 import skin.support.widget.SkinCompatEditText;
 import skin.support.widget.SkinCompatHelper;
@@ -28,7 +28,6 @@ import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 public class SkinMaterialTextInputLayout extends TextInputLayout implements SkinCompatSupportable {
     private static final String TAG = SkinMaterialTextInputLayout.class.getSimpleName();
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
-    private int mPasswordToggleResId = INVALID_ID;
     private int mCounterTextColorResId = INVALID_ID;
     private int mErrorTextColorResId = INVALID_ID;
     private int mFocusedTextColorResId = INVALID_ID;
@@ -52,26 +51,19 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
         if (a.hasValue(R.styleable.TextInputLayout_android_textColorHint)) {
             mDefaultTextColorResId = mFocusedTextColorResId =
                     a.getResourceId(R.styleable.TextInputLayout_android_textColorHint, INVALID_ID);
-            SkinLog.e(TAG, "mDefaultTextColorResId = " + mDefaultTextColorResId
-                    + ", hex = " + Integer.toHexString(getResources().getColor(mDefaultTextColorResId))
-                    + ", res name = " + getResources().getResourceName(mDefaultTextColorResId));
             applyFocusedTextColorResource();
         }
 
-        int errorTextAppearance = a.getResourceId(R.styleable.TextInputLayout_errorTextAppearance, INVALID_ID);
-        loadErrorTextColorResFromAttributes(errorTextAppearance);
         int counterTextAppearance = a.getResourceId(R.styleable.TextInputLayout_counterTextAppearance, INVALID_ID);
         loadCounterTextColorResFromAttributes(counterTextAppearance);
-        mPasswordToggleResId = a.getResourceId(R.styleable.TextInputLayout_passwordToggleDrawable, INVALID_ID);
         a.recycle();
     }
 
     private void loadCounterTextColorResFromAttributes(@StyleRes int resId) {
         if (resId != INVALID_ID) {
-            TintTypedArray counterTA = TintTypedArray.obtainStyledAttributes(getContext(), resId, skin.support.R.styleable.SkinTextAppearance);
+            TypedArray counterTA = getContext().obtainStyledAttributes(resId, skin.support.R.styleable.SkinTextAppearance);
             if (counterTA.hasValue(skin.support.R.styleable.SkinTextAppearance_android_textColor)) {
                 mCounterTextColorResId = counterTA.getResourceId(skin.support.R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
-                SkinLog.d(TAG, "mCounterTextColorResId name = " + getResources().getResourceName(mCounterTextColorResId));
             }
             counterTA.recycle();
         }
@@ -110,25 +102,6 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
     }
 
     @Override
-    public void setErrorTextAppearance(@StyleRes int resId) {
-        super.setErrorTextAppearance(resId);
-        loadErrorTextColorResFromAttributes(resId);
-    }
-
-    private void loadErrorTextColorResFromAttributes(@StyleRes int resId) {
-        if (resId != INVALID_ID) {
-            TintTypedArray errorTA = TintTypedArray.obtainStyledAttributes(getContext(),
-                    resId, skin.support.R.styleable.SkinTextAppearance);
-            if (errorTA.hasValue(skin.support.R.styleable.SkinTextAppearance_android_textColor)) {
-                mErrorTextColorResId = errorTA.getResourceId(skin.support.R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
-                SkinLog.d(TAG, "mErrorTextColorResId = " + SkinCompatHelper.checkResourceId(mErrorTextColorResId));
-            }
-            errorTA.recycle();
-        }
-        applyErrorTextColorResource();
-    }
-
-    @Override
     public void setErrorEnabled(boolean enabled) {
         super.setErrorEnabled(enabled);
         if (enabled) {
@@ -138,7 +111,7 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
 
     private void applyErrorTextColorResource() {
         mErrorTextColorResId = SkinCompatHelper.checkResourceId(mErrorTextColorResId);
-        if (mErrorTextColorResId != INVALID_ID && mErrorTextColorResId != R.color.design_error) {
+        if (mErrorTextColorResId != INVALID_ID) {
             TextView errorView = getErrorView();
             if (errorView != null) {
                 errorView.setTextColor(SkinCompatResources.getInstance().getColor(mErrorTextColorResId));
@@ -181,7 +154,7 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
 
     private void applyFocusedTextColorResource() {
         mFocusedTextColorResId = SkinCompatHelper.checkResourceId(mFocusedTextColorResId);
-        if (mFocusedTextColorResId != INVALID_ID && mFocusedTextColorResId != R.color.abc_hint_foreground_material_light) {
+        if (mFocusedTextColorResId != INVALID_ID) {
             setFocusedTextColor(SkinCompatResources.getInstance().getColorStateList(mFocusedTextColorResId));
         } else if (getEditText() != null) {
             int textColorResId = INVALID_ID;

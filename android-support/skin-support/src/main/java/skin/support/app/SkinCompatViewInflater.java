@@ -10,7 +10,6 @@ import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.TintContextWrapper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.InflateException;
@@ -68,7 +67,7 @@ public class SkinCompatViewInflater {
 
     public final View createView(View parent, final String name, @NonNull Context context,
                                  @NonNull AttributeSet attrs, boolean inheritContext,
-                                 boolean readAndroidTheme, boolean readAppTheme, boolean wrapContext) {
+                                 boolean readAndroidTheme, boolean readAppTheme) {
         final Context originalContext = context;
 
         // We can emulate Lollipop's android:theme attribute propagating down the view hierarchy
@@ -79,9 +78,6 @@ public class SkinCompatViewInflater {
         if (readAndroidTheme || readAppTheme) {
             // We then apply the theme on the context, if specified
             context = themifyContext(context, attrs, readAndroidTheme, readAppTheme);
-        }
-        if (wrapContext) {
-            context = TintContextWrapper.wrap(context);
         }
 
         View view = createViewFromHackInflater(context, name, attrs);

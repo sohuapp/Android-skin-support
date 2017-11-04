@@ -4,6 +4,6 @@
         android:state_focused="true"
         android:alpha="0.9"
         android:color="@color/text_color_tip" />
-    <item android:alpha="@dimen/hint_alpha_material_light"
+    <item android:alpha="0.8"
         android:color="@color/text_color" />
 </selector>

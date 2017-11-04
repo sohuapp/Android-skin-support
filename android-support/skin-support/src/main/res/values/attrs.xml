@@ -6,7 +6,6 @@
 
     <declare-styleable name="SkinCompatImageView">
         <attr name="android:src" />
-        <attr name="srcCompat" />
     </declare-styleable>
 
     <declare-styleable name="SkinCompatTextHelper">

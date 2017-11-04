@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.support.v7.content.res.AppCompatResources;
 import android.text.TextUtils;
 
 import skin.support.SkinCompatManager;
@@ -82,20 +81,6 @@ public class SkinCompatResources {
 
         int targetResId = getTargetResId(resId);
         return targetResId == 0 ? originColor : mResources.getColor(targetResId);
-    }
-
-    public Drawable getSrcCompatDrawable(Context context, int resId) {
-        Drawable originDrawable = AppCompatResources.getDrawable(context, resId);
-        if (isDefaultSkin) {
-            return originDrawable;
-        }
-
-        int targetResId = getTargetResId(resId);
-        try {
-            return targetResId == 0 ? originDrawable : mResources.getDrawable(targetResId);
-        } catch (Exception e) {
-            return originDrawable;
-        }
     }
 
     public Drawable getDrawable(int resId) {
