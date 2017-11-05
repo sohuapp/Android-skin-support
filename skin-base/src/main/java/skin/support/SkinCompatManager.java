@@ -18,13 +18,14 @@ import java.util.List;
 import java.util.Map;
 
 import skin.support.app.SkinActivityLifecycle;
+import skin.support.app.SkinCompatViewFactory;
 import skin.support.app.SkinLayoutInflater;
+import skin.support.content.res.SkinCompatResources;
 import skin.support.load.SkinAssetsLoader;
 import skin.support.load.SkinBuildInLoader;
 import skin.support.load.SkinPrefixBuildInLoader;
 import skin.support.observe.SkinObservable;
 import skin.support.utils.SkinPreference;
-import skin.support.content.res.SkinCompatResources;
 
 public class SkinCompatManager extends SkinObservable {
     public static final int SKIN_LOADER_STRATEGY_NONE = -1;
@@ -111,6 +112,9 @@ public class SkinCompatManager extends SkinObservable {
                     instance = new SkinCompatManager(application);
                     sInstanceMap.put(application, instance);
                 }
+                SkinPreference.init(application);
+                SkinCompatResources.init(application);
+                SkinActivityLifecycle.init(application);
             }
         }
         return instance;
@@ -122,9 +126,6 @@ public class SkinCompatManager extends SkinObservable {
 
     private SkinCompatManager(Application application) {
         mAppContext = application;
-        SkinPreference.init(mAppContext);
-        SkinCompatResources.init(mAppContext);
-        SkinActivityLifecycle.init(application);
         initLoaderStrategy();
     }
 
@@ -152,7 +153,7 @@ public class SkinCompatManager extends SkinObservable {
     /**
      * 自定义View换肤时，可选择添加一个{@link SkinLayoutInflater}
      *
-     * @param inflater 在{@link skin.support.app.SkinCompatViewInflater#createView(Context, String, String)}方法中调用.
+     * @param inflater 在{@link SkinCompatViewFactory#createView(Context, String, String)}方法中调用.
      * @return
      */
     public SkinCompatManager addInflater(SkinLayoutInflater inflater) {
@@ -168,7 +169,7 @@ public class SkinCompatManager extends SkinObservable {
     /**
      * 自定义View换肤时，可选择添加一个{@link SkinLayoutInflater}
      *
-     * @param inflater 在{@link skin.support.app.SkinCompatViewInflater#createView(Context, String, String)}方法中最先调用.
+     * @param inflater 在{@link SkinCompatViewFactory#createView(Context, String, String)}方法中最先调用.
      * @return
      */
     public SkinCompatManager addHookInflater(SkinLayoutInflater inflater) {

@@ -12,10 +12,8 @@ import skin.support.content.res.SkinCompatResources;
  * Created by ximsfei on 2017/1/12.
  */
 public class SkinCompatImageHelper extends SkinCompatHelper {
-    private static final String TAG = SkinCompatImageHelper.class.getSimpleName();
     private final ImageView mView;
     private int mSrcResId = INVALID_ID;
-    private int mSrcCompatResId = INVALID_ID;
 
     public SkinCompatImageHelper(ImageView imageView) {
         mView = imageView;
@@ -44,7 +42,7 @@ public class SkinCompatImageHelper extends SkinCompatHelper {
         if (mSrcResId == INVALID_ID) {
             return;
         }
-        Drawable drawable = SkinCompatResources.getInstance().getDrawable(mSrcResId);
+        Drawable drawable = SkinCompatResources.getInstance(mView.getContext()).getDrawable(mSrcResId);
         if (drawable != null) {
             mView.setImageDrawable(drawable);
         }

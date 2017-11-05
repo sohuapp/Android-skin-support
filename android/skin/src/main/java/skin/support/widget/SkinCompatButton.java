@@ -1,9 +1,7 @@
 package skin.support.widget;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.Button;
 

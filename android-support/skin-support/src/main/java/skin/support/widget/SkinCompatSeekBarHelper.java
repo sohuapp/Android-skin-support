@@ -40,7 +40,7 @@ public class SkinCompatSeekBarHelper extends SkinCompatProgressBarHelper {
         super.applySkin();
         mThumbResId = checkResourceId(mThumbResId);
         if (mThumbResId != INVALID_ID) {
-            mView.setThumb(SkinCompatResources.getInstance().getDrawable(mThumbResId));
+            mView.setThumb(SkinCompatResources.getInstance(mView.getContext()).getDrawable(mThumbResId));
         }
     }
 }

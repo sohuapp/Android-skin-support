@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.TintTypedArray;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 
@@ -68,21 +67,21 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
     private void applyTitleTextColor() {
         mTitleTextColorResId = SkinCompatHelper.checkResourceId(mTitleTextColorResId);
         if (mTitleTextColorResId != INVALID_ID) {
-            setTitleTextColor(SkinCompatResources.getInstance().getColor(mTitleTextColorResId));
+            setTitleTextColor(SkinCompatResources.getInstance(getContext()).getColor(mTitleTextColorResId));
         }
     }
 
     private void applySubtitleTextColor() {
         mSubtitleTextColorResId = SkinCompatHelper.checkResourceId(mSubtitleTextColorResId);
         if (mSubtitleTextColorResId != INVALID_ID) {
-            setSubtitleTextColor(SkinCompatResources.getInstance().getColor(mSubtitleTextColorResId));
+            setSubtitleTextColor(SkinCompatResources.getInstance(getContext()).getColor(mSubtitleTextColorResId));
         }
     }
 
     private void applyNavigationIcon() {
         mNavigationIconResId = SkinCompatHelper.checkResourceId(mNavigationIconResId);
         if (mNavigationIconResId != INVALID_ID) {
-            setNavigationIcon(SkinCompatResources.getInstance().getDrawable(mNavigationIconResId));
+            setNavigationIcon(SkinCompatResources.getInstance(getContext()).getDrawable(mNavigationIconResId));
         }
     }
 

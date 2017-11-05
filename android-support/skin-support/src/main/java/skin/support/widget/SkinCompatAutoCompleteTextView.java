@@ -1,13 +1,9 @@
 package skin.support.widget;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
 
@@ -60,7 +56,7 @@ public class SkinCompatAutoCompleteTextView extends AppCompatAutoCompleteTextVie
     private void applyDropDownBackgroundResource() {
         mDropDownBackgroundResId = SkinCompatHelper.checkResourceId(mDropDownBackgroundResId);
         if (mDropDownBackgroundResId != INVALID_ID) {
-            Drawable drawable = SkinCompatResources.getInstance().getDrawable(mDropDownBackgroundResId);
+            Drawable drawable = SkinCompatResources.getInstance(getContext()).getDrawable(mDropDownBackgroundResId);
             if (drawable != null) {
                 setDropDownBackgroundDrawable(drawable);
             }

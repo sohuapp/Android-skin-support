@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
-import skin.support.widget.SkinCompatAutoCompleteTextView;
 import skin.support.widget.SkinCompatButton;
 import skin.support.widget.SkinCompatCheckBox;
 import skin.support.widget.SkinCompatCheckedTextView;
@@ -22,22 +21,12 @@ import skin.support.widget.SkinCompatRatingBar;
 import skin.support.widget.SkinCompatRelativeLayout;
 import skin.support.widget.SkinCompatScrollView;
 import skin.support.widget.SkinCompatSeekBar;
-import skin.support.widget.SkinCompatSpinner;
 import skin.support.widget.SkinCompatTextView;
-import skin.support.widget.SkinCompatToolbar;
 import skin.support.widget.SkinCompatView;
 
-public class SkinCompatViewInflater implements SkinLayoutInflater {
+public class SkinViewInflater implements SkinLayoutInflater {
     @Override
     public View createView(@NonNull Context context, String name, @NonNull AttributeSet attrs) {
-        View view = createViewFromFV(context, name, attrs);
-        if (view == null) {
-            view = createViewFromV7(context, name, attrs);
-        }
-        return view;
-    }
-
-    private View createViewFromFV(Context context, String name, AttributeSet attrs) {
         View view = null;
         if (name.contains(".")) {
             return null;
@@ -67,9 +56,6 @@ public class SkinCompatViewInflater implements SkinLayoutInflater {
             case "EditText":
                 view = new SkinCompatEditText(context, attrs);
                 break;
-            case "Spinner":
-                view = new SkinCompatSpinner(context, attrs);
-                break;
             case "ImageButton":
                 view = new SkinCompatImageButton(context, attrs);
                 break;
@@ -85,9 +71,6 @@ public class SkinCompatViewInflater implements SkinLayoutInflater {
             case "CheckedTextView":
                 view = new SkinCompatCheckedTextView(context, attrs);
                 break;
-            case "AutoCompleteTextView":
-                view = new SkinCompatAutoCompleteTextView(context, attrs);
-                break;
             case "MultiAutoCompleteTextView":
                 view = new SkinCompatMultiAutoCompleteTextView(context, attrs);
                 break;
@@ -102,16 +85,6 @@ public class SkinCompatViewInflater implements SkinLayoutInflater {
                 break;
             case "ScrollView":
                 view = new SkinCompatScrollView(context, attrs);
-                break;
-        }
-        return view;
-    }
-
-    private View createViewFromV7(Context context, String name, AttributeSet attrs) {
-        View view = null;
-        switch (name) {
-            case "android.support.v7.widget.Toolbar":
-                view = new SkinCompatToolbar(context, attrs);
                 break;
         }
         return view;

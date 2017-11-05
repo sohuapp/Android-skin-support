@@ -1,4 +1,4 @@
-include ':android:skin', ':android-support:skin-support'
+include ':skin-base', ':android:skin', ':android-support:skin-support'
 //        ':demo:skin-app', ':demo:skin-night', ':demo:skin-autolayout-app',
 //        ':android-support:skin-support-design',
 //        ':android-support:skin-support-cardview',

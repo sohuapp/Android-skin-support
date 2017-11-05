@@ -18,7 +18,7 @@ import skin.support.widget.SkinCompatSupportable;
 
 public class SkinCompatDelegate implements LayoutInflaterFactory {
     private final Context mContext;
-    private SkinCompatViewInflater mSkinCompatViewInflater;
+    private SkinCompatViewFactory mSkinCompatViewInflater;
     private List<WeakReference<SkinCompatSupportable>> mSkinHelpers = new ArrayList<>();
 
     private SkinCompatDelegate(Context context) {
@@ -33,7 +33,7 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
             return null;
         }
         if (view instanceof SkinCompatSupportable) {
-            mSkinHelpers.add(new WeakReference<SkinCompatSupportable>((SkinCompatSupportable) view));
+            mSkinHelpers.add(new WeakReference<>((SkinCompatSupportable) view));
         }
 
         return view;
@@ -44,7 +44,7 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
         final boolean isPre21 = Build.VERSION.SDK_INT < 21;
 
         if (mSkinCompatViewInflater == null) {
-            mSkinCompatViewInflater = new SkinCompatViewInflater();
+            mSkinCompatViewInflater = new SkinCompatViewFactory();
         }
 
         // We only want the View to inherit its context if we're running pre-v21
