@@ -16,12 +16,12 @@ import java.util.List;
 
 import skin.support.widget.SkinCompatSupportable;
 
-public class SkinCompatDelegate implements LayoutInflaterFactory {
+public class SkinDelegate implements LayoutInflaterFactory {
     private final Context mContext;
-    private SkinCompatViewFactory mSkinCompatViewInflater;
+    private SkinViewInflater mSkinCompatViewInflater;
     private List<WeakReference<SkinCompatSupportable>> mSkinHelpers = new ArrayList<>();
 
-    private SkinCompatDelegate(Context context) {
+    private SkinDelegate(Context context) {
         mContext = context;
     }
 
@@ -44,7 +44,7 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
         final boolean isPre21 = Build.VERSION.SDK_INT < 21;
 
         if (mSkinCompatViewInflater == null) {
-            mSkinCompatViewInflater = new SkinCompatViewFactory();
+            mSkinCompatViewInflater = new SkinViewInflater();
         }
 
         // We only want the View to inherit its context if we're running pre-v21
@@ -84,8 +84,8 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
         return false;
     }
 
-    public static SkinCompatDelegate create(Context context) {
-        return new SkinCompatDelegate(context);
+    public static SkinDelegate create(Context context) {
+        return new SkinDelegate(context);
     }
 
     public void applySkin() {

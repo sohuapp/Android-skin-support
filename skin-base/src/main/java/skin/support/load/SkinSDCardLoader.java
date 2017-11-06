@@ -17,11 +17,13 @@ public abstract class SkinSDCardLoader implements SkinLoaderStrategy {
             String pkgName = SkinCompatManager.getInstance(context).getSkinPackageName(skinPkgPath);
             Resources resources = SkinCompatManager.getInstance(context).getSkinResources(skinPkgPath);
             if (resources != null && !TextUtils.isEmpty(pkgName)) {
-                SkinCompatResources.getInstance(context).setupSkin(
-                        resources,
-                        pkgName,
-                        skinName,
-                        this);
+                SkinCompatResources.getInstance(context).addSkinEntry(
+                        new SkinCompatResources.SkinEntry(
+                                context.getApplicationContext(),
+                                resources,
+                                pkgName,
+                                skinName,
+                                this));
                 return skinName;
             }
         }
@@ -31,7 +33,16 @@ public abstract class SkinSDCardLoader implements SkinLoaderStrategy {
     protected abstract String getSkinPath(Context context, String skinName);
 
     @Override
-    public String getTargetResourceEntryName(Context context, String skinName, int resId) {
-        return null;
+    public String getTargetResourceEntryName(Context context, String skinName,
+                                             int resId, int affixesType, String affixesStr) {
+        switch (affixesType) {
+            case PREFIX:
+                return affixesStr + "_" + context.getResources().getResourceEntryName(resId);
+            case SUFFIX:
+                return context.getResources().getResourceEntryName(resId) + "_" + affixesStr;
+            case NONE:
+            default:
+                return null;
+        }
     }
 }

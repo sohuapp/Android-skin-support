@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -18,20 +17,18 @@ import java.util.List;
 import java.util.Map;
 
 import skin.support.app.SkinActivityLifecycle;
-import skin.support.app.SkinCompatViewFactory;
+import skin.support.app.SkinViewInflater;
 import skin.support.app.SkinLayoutInflater;
 import skin.support.content.res.SkinCompatResources;
 import skin.support.load.SkinAssetsLoader;
 import skin.support.load.SkinBuildInLoader;
-import skin.support.load.SkinPrefixBuildInLoader;
 import skin.support.observe.SkinObservable;
 import skin.support.utils.SkinPreference;
 
 public class SkinCompatManager extends SkinObservable {
-    public static final int SKIN_LOADER_STRATEGY_NONE = -1;
     public static final int SKIN_LOADER_STRATEGY_ASSETS = 0;
     public static final int SKIN_LOADER_STRATEGY_BUILD_IN = 1;
-    public static final int SKIN_LOADER_STRATEGY_PREFIX_BUILD_IN = 2;
+    private static final String SKIN_SEPARATOR = "&";
     private static final Map<Context, SkinCompatManager> sInstanceMap = new HashMap<>();
     private final Object mLock = new Object();
     private final Context mAppContext;
@@ -68,6 +65,10 @@ public class SkinCompatManager extends SkinObservable {
      * 皮肤包加载策略.
      */
     public interface SkinLoaderStrategy {
+        int NONE = -1;
+        int PREFIX = 0;
+        int SUFFIX = 1;
+
         /**
          * 加载皮肤包.
          *
@@ -80,17 +81,18 @@ public class SkinCompatManager extends SkinObservable {
         /**
          * 根据应用中的资源ID，获取皮肤包相应资源的资源名.
          *
-         * @param context  {@link Context}
-         * @param skinName 皮肤包名称.
-         * @param resId    应用中需要换肤的资源ID.
+         * @param context     {@link Context}
+         * @param skinName    皮肤包名称.
+         * @param resId       应用中需要换肤的资源ID.
+         * @param affixesType {@link #NONE} {@link #PREFIX} {@link #SUFFIX}
+         * @param affixesStr  资源名，词缀字符串
          * @return 皮肤包中相应的资源名.
          */
-        String getTargetResourceEntryName(Context context, String skinName, int resId);
+        String getTargetResourceEntryName(Context context, String skinName, int resId, int affixesType, String affixesStr);
 
         /**
          * {@link #SKIN_LOADER_STRATEGY_ASSETS}
          * {@link #SKIN_LOADER_STRATEGY_BUILD_IN}
-         * {@link #SKIN_LOADER_STRATEGY_PREFIX_BUILD_IN}
          *
          * @return 皮肤包加载策略类型.
          */
@@ -132,7 +134,6 @@ public class SkinCompatManager extends SkinObservable {
     private void initLoaderStrategy() {
         mStrategyMap.put(SKIN_LOADER_STRATEGY_ASSETS, new SkinAssetsLoader());
         mStrategyMap.put(SKIN_LOADER_STRATEGY_BUILD_IN, new SkinBuildInLoader());
-        mStrategyMap.put(SKIN_LOADER_STRATEGY_PREFIX_BUILD_IN, new SkinPrefixBuildInLoader());
     }
 
     /**
@@ -153,7 +154,7 @@ public class SkinCompatManager extends SkinObservable {
     /**
      * 自定义View换肤时，可选择添加一个{@link SkinLayoutInflater}
      *
-     * @param inflater 在{@link SkinCompatViewFactory#createView(Context, String, String)}方法中调用.
+     * @param inflater 在{@link SkinViewInflater#createView(Context, String, String)}方法中调用.
      * @return
      */
     public SkinCompatManager addInflater(SkinLayoutInflater inflater) {
@@ -169,7 +170,7 @@ public class SkinCompatManager extends SkinObservable {
     /**
      * 自定义View换肤时，可选择添加一个{@link SkinLayoutInflater}
      *
-     * @param inflater 在{@link SkinCompatViewFactory#createView(Context, String, String)}方法中最先调用.
+     * @param inflater 在{@link SkinViewInflater#createView(Context, String, String)}方法中最先调用.
      * @return
      */
     public SkinCompatManager addHookInflater(SkinLayoutInflater inflater) {
@@ -193,8 +194,8 @@ public class SkinCompatManager extends SkinObservable {
     /**
      * 恢复默认主题，使用应用自带资源.
      */
-    public void restoreDefaultTheme() {
-        loadSkin("");
+    public void restoreDefaultSkin() {
+        loadSkin(null, null, 0, "", null);
     }
 
     /**
@@ -232,13 +233,8 @@ public class SkinCompatManager extends SkinObservable {
      *
      * @return
      */
-    public AsyncTask loadSkin() {
-        String skin = SkinPreference.getInstance(mAppContext).getSkinName();
-        int strategy = SkinPreference.getInstance(mAppContext).getSkinStrategy();
-        if (TextUtils.isEmpty(skin) || strategy == SKIN_LOADER_STRATEGY_NONE) {
-            return null;
-        }
-        return loadSkin(skin, null, strategy);
+    public void loadSkin() {
+        loadSkin(null);
     }
 
     /**
@@ -247,23 +243,28 @@ public class SkinCompatManager extends SkinObservable {
      * @param listener 皮肤包加载监听.
      * @return
      */
-    public AsyncTask loadSkin(SkinLoaderListener listener) {
+    public void loadSkin(SkinLoaderListener listener) {
         String skin = SkinPreference.getInstance(mAppContext).getSkinName();
-        int strategy = SkinPreference.getInstance(mAppContext).getSkinStrategy();
-        if (TextUtils.isEmpty(skin) || strategy == SKIN_LOADER_STRATEGY_NONE) {
-            return null;
+        String strategy = SkinPreference.getInstance(mAppContext).getSkinStrategy();
+        if (!TextUtils.isEmpty(skin) && !TextUtils.isEmpty(strategy)) {
+            try {
+                String[] nameArray = skin.split(SKIN_SEPARATOR);
+                String[] strategyArray = strategy.split(SKIN_SEPARATOR);
+                if (nameArray.length == strategyArray.length) {
+                    int count = nameArray.length;
+                    List<String> skinNames = new ArrayList<>();
+                    List<Integer> strategies = new ArrayList<>();
+                    for (int i = 0; i < count; i++) {
+                        skinNames.add(nameArray[i]);
+                        strategies.add(Integer.valueOf(strategyArray[i]));
+                    }
+                    loadSkin(skinNames, strategies, SkinPreference.getInstance(mAppContext).getAffixesType(),
+                            SkinPreference.getInstance(mAppContext).getAffixesStr(), listener);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return loadSkin(skin, listener, strategy);
-    }
-
-    @Deprecated
-    public AsyncTask loadSkin(String skinName) {
-        return loadSkin(skinName, null);
-    }
-
-    @Deprecated
-    public AsyncTask loadSkin(String skinName, final SkinLoaderListener listener) {
-        return loadSkin(skinName, listener, SKIN_LOADER_STRATEGY_ASSETS);
     }
 
     /**
@@ -273,29 +274,74 @@ public class SkinCompatManager extends SkinObservable {
      * @param strategy 皮肤包加载策略.
      * @return
      */
-    public AsyncTask loadSkin(String skinName, int strategy) {
-        return loadSkin(skinName, null, strategy);
+    public void loadSkin(String skinName, int strategy) {
+        if (strategy == SKIN_LOADER_STRATEGY_BUILD_IN) {
+            loadSkin(skinName, strategy, SkinLoaderStrategy.PREFIX, skinName, null);
+        } else {
+            loadSkin(skinName, strategy, SkinLoaderStrategy.NONE, "", null);
+        }
     }
 
     /**
      * 加载皮肤包.
      *
-     * @param skinName 皮肤包名称.
-     * @param listener 皮肤包加载监听.
-     * @param strategy 皮肤包加载策略.
+     * @param skinName   皮肤包名称.
+     * @param strategy   皮肤包加载策略.
+     * @param affixesType 词缀类型
+     * @param affixesStr 词缀名
      * @return
      */
-    public AsyncTask loadSkin(String skinName, SkinLoaderListener listener, int strategy) {
-        return new SkinLoadTask(listener, mStrategyMap.get(strategy)).execute(skinName);
+    public void loadSkin(String skinName, int strategy, int affixesType, String affixesStr) {
+        loadSkin(skinName, strategy, affixesType, affixesStr, null);
     }
 
-    private class SkinLoadTask extends AsyncTask<String, Void, String> {
+    /**
+     * 加载皮肤包.
+     *
+     * @param skinName   皮肤包名称.
+     * @param listener   皮肤包加载监听.
+     * @param strategy   皮肤包加载策略.
+     * @param affixesType 词缀类型
+     * @param affixesStr 词缀名
+     * @param listener   皮肤包加载监听.
+     * @return
+     */
+    public void loadSkin(String skinName, int strategy, int affixesType, String affixesStr, SkinLoaderListener listener) {
+        List<String> skinNames = new ArrayList<>();
+        skinNames.add(skinName);
+        List<Integer> strategies = new ArrayList<>();
+        strategies.add(strategy);
+        loadSkin(skinNames, strategies, affixesType, affixesStr, listener);
+    }
+
+    /**
+     * 加载皮肤包.
+     *
+     * @param skinNames  皮肤包名称list.
+     * @param strategies 皮肤包加载策略list.
+     * @param affixesType 词缀类型
+     * @param affixesStr 词缀名
+     * @param listener   皮肤包加载监听.
+     * @return
+     */
+    public void loadSkin(List<String> skinNames, List<Integer> strategies, int affixesType, String affixesStr, SkinLoaderListener listener) {
+        new SkinLoadTask(skinNames, strategies, affixesType, affixesStr, listener).execute();
+    }
+
+    private class SkinLoadTask extends AsyncTask<Void, Void, Boolean> {
         private final SkinLoaderListener mListener;
-        private final SkinLoaderStrategy mStrategy;
+        private final List<String> mSkinNames;
+        private final List<Integer> mStrategies;
+        private final int mAffixesType;
+        private final String mAffixesStr;
 
-        SkinLoadTask(@Nullable SkinLoaderListener listener, @NonNull SkinLoaderStrategy strategy) {
+        SkinLoadTask(List<String> skinNames, List<Integer> strategies,
+                     int affixesType, String affixesStr, SkinLoaderListener listener) {
             mListener = listener;
-            mStrategy = strategy;
+            mSkinNames = skinNames;
+            mStrategies = strategies;
+            mAffixesType = affixesType;
+            mAffixesStr = affixesStr;
         }
 
         protected void onPreExecute() {
@@ -305,7 +351,7 @@ public class SkinCompatManager extends SkinObservable {
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Boolean doInBackground(Void... params) {
             synchronized (mLock) {
                 while (mLoading) {
                     try {
@@ -316,33 +362,69 @@ public class SkinCompatManager extends SkinObservable {
                 }
                 mLoading = true;
             }
+            boolean success = false;
             try {
-                if (params.length == 1) {
-                    if (TextUtils.isEmpty(params[0])) {
-                        SkinCompatResources.getInstance(mAppContext).reset();
-                        return params[0];
-                    }
-                    if (!TextUtils.isEmpty(
-                            mStrategy.loadSkinInBackground(mAppContext, params[0]))) {
-                        return params[0];
-                    }
+                SkinCompatResources.getInstance(mAppContext).reset();
+                if (mSkinNames == null || mStrategies == null || mSkinNames.isEmpty()) {
+                    return true;
+                }
+                if (mSkinNames.size() != mStrategies.size()) {
+                    return false;
+                }
+
+                int skinCount = mSkinNames.size();
+                for (int i = skinCount - 1; i >= 0; i--) {
+                    String path = mStrategyMap.get(mStrategies.get(i))
+                            .loadSkinInBackground(mAppContext, mSkinNames.get(i));
+                    success = !TextUtils.isEmpty(path);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            SkinCompatResources.getInstance(mAppContext).reset();
-            return null;
+            if (!success) {
+                SkinCompatResources.getInstance(mAppContext).reset();
+            }
+            return success;
         }
 
-        protected void onPostExecute(String skinName) {
+        protected void onPostExecute(Boolean success) {
             synchronized (mLock) {
-                // skinName 为""时，恢复默认皮肤
-                if (skinName != null) {
-                    SkinPreference.getInstance(mAppContext).setSkinName(skinName).setSkinStrategy(mStrategy.getType()).commitEditor();
+                if (success) {
+                    if (mSkinNames == null || mSkinNames.isEmpty()) {
+                        SkinPreference.getInstance(mAppContext)
+                                .setSkinName("")
+                                .setSkinStrategy("")
+                                .setAffixesType(SkinLoaderStrategy.NONE)
+                                .setAffixesStr("")
+                                .commitEditor();
+                    } else {
+                        StringBuilder skinName = new StringBuilder();
+                        StringBuilder skinStrategy = new StringBuilder();
+                        int skinCount = mSkinNames.size();
+                        for (int i = 0; i < skinCount; i++) {
+                            if (i != 0) {
+                                skinName.append(SKIN_SEPARATOR);
+                                skinStrategy.append(SKIN_SEPARATOR);
+                            }
+                            skinName.append(mSkinNames.get(i));
+                            skinStrategy.append(mStrategies.get(i));
+                        }
+                        SkinPreference.getInstance(mAppContext)
+                                .setSkinName(skinName.toString())
+                                .setSkinStrategy(skinStrategy.toString())
+                                .setAffixesType(mAffixesType)
+                                .setAffixesStr(mAffixesStr)
+                                .commitEditor();
+                    }
                     notifyUpdateSkin();
                     if (mListener != null) mListener.onSuccess();
                 } else {
-                    SkinPreference.getInstance(mAppContext).setSkinName("").setSkinStrategy(SKIN_LOADER_STRATEGY_NONE).commitEditor();
+                    SkinPreference.getInstance(mAppContext)
+                            .setSkinName("")
+                            .setSkinStrategy("")
+                            .setAffixesType(SkinLoaderStrategy.NONE)
+                            .setAffixesStr("")
+                            .commitEditor();
                     if (mListener != null) mListener.onFailed("皮肤资源获取失败");
                 }
                 mLoading = false;

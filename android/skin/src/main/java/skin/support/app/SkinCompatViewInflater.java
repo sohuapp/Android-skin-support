@@ -24,7 +24,7 @@ import skin.support.widget.SkinCompatSeekBar;
 import skin.support.widget.SkinCompatTextView;
 import skin.support.widget.SkinCompatView;
 
-public class SkinViewInflater implements SkinLayoutInflater {
+public class SkinCompatViewInflater implements SkinLayoutInflater {
     @Override
     public View createView(@NonNull Context context, String name, @NonNull AttributeSet attrs) {
         View view = null;

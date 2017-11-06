@@ -22,7 +22,7 @@ import skin.base.R;
 import skin.support.SkinCompatManager;
 import skin.support.view.ContextThemeWrapper;
 
-public class SkinCompatViewFactory {
+public class SkinViewInflater {
     private static final Class<?>[] sConstructorSignature = new Class[]{
             Context.class, AttributeSet.class};
     private static final int[] sOnClickAttrs = new int[]{android.R.attr.onClick};

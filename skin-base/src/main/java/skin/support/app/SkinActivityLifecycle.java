@@ -19,7 +19,7 @@ import skin.support.widget.SkinCompatSupportable;
 
 public class SkinActivityLifecycle implements Application.ActivityLifecycleCallbacks {
     private static final Map<Context, SkinActivityLifecycle> sInstanceMap = new HashMap<>();
-    private WeakHashMap<Context, SkinCompatDelegate> mSkinDelegateMap;
+    private WeakHashMap<Context, SkinDelegate> mSkinDelegateMap;
     private WeakHashMap<Context, SkinObserver> mSkinObserverMap;
 
     public static SkinActivityLifecycle init(Application application) {
@@ -54,14 +54,14 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
         }
     }
 
-    private SkinCompatDelegate getSkinDelegate(Context context) {
+    private SkinDelegate getSkinDelegate(Context context) {
         if (mSkinDelegateMap == null) {
             mSkinDelegateMap = new WeakHashMap<>();
         }
 
-        SkinCompatDelegate mSkinDelegate = mSkinDelegateMap.get(context);
+        SkinDelegate mSkinDelegate = mSkinDelegateMap.get(context);
         if (mSkinDelegate == null) {
-            mSkinDelegate = SkinCompatDelegate.create(context);
+            mSkinDelegate = SkinDelegate.create(context);
         }
         mSkinDelegateMap.put(context, mSkinDelegate);
         return mSkinDelegate;
