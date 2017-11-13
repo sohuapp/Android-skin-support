@@ -3,6 +3,7 @@ package skin.support.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.view.LayoutInflater;
@@ -13,9 +14,14 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import skin.support.SkinCompatManager;
+import skin.support.content.res.SkinCompatResources;
 import skin.support.observe.SkinObservable;
 import skin.support.observe.SkinObserver;
 import skin.support.widget.SkinCompatSupportable;
+import skin.support.widget.SkinThemeUtils;
+
+import static skin.support.widget.SkinCompatHelper.INVALID_ID;
+import static skin.support.widget.SkinCompatHelper.checkResourceId;
 
 public class SkinActivityLifecycle implements Application.ActivityLifecycleCallbacks {
     private static final Map<Context, SkinActivityLifecycle> sInstanceMap = new HashMap<>();
@@ -139,13 +145,13 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
 
     private void updateWindowBackground(Activity activity) {
         if (SkinCompatManager.getInstance(activity).isSkinWindowBackgroundEnable()) {
-//            int windowBackgroundResId = SkinCompatThemeUtils.getWindowBackgroundResId(activity);
-//            if (checkResourceId(windowBackgroundResId) != INVALID_ID) {
-//                Drawable drawable = SkinCompatResources.getInstance(activity).getDrawable(windowBackgroundResId);
-//                if (drawable != null) {
-//                    activity.getWindow().setBackgroundDrawable(drawable);
-//                }
-//            }
+            int windowBackgroundResId = SkinThemeUtils.getWindowBackgroundResId(activity);
+            if (checkResourceId(windowBackgroundResId) != INVALID_ID) {
+                Drawable drawable = SkinCompatResources.getInstance(activity).getDrawable(windowBackgroundResId);
+                if (drawable != null) {
+                    activity.getWindow().setBackgroundDrawable(drawable);
+                }
+            }
         }
     }
 }

@@ -7,7 +7,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.InflateException;
@@ -129,7 +128,7 @@ public class SkinViewInflater {
         final Context context = view.getContext();
 
         if (!(context instanceof ContextWrapper) ||
-                (Build.VERSION.SDK_INT >= 15 && !ViewCompat.hasOnClickListeners(view))) {
+                (Build.VERSION.SDK_INT >= 15 && !view.hasOnClickListeners())) {
             // Skip our compat functionality if: the Context isn't a ContextWrapper, or
             // the view doesn't have an OnClickListener (we can only rely on this on API 15+ so
             // always use our compat code on older devices)
