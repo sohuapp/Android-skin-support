@@ -37,6 +37,10 @@ public class SkinCompatResources {
             mStrategy = strategy;
         }
 
+        public Resources getResources() {
+            return mResources;
+        }
+
         public int getTargetResId(int resId) {
             try {
                 String resName = null;
@@ -85,6 +89,10 @@ public class SkinCompatResources {
 
     public void addSkinEntry(SkinEntry entry) {
         mSkinEntries.add(entry);
+    }
+
+    public List<SkinEntry> getSkinEntries() {
+        return mSkinEntries;
     }
 
     public int getColor(int resId) {
