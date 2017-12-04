@@ -101,6 +101,9 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
         if (isContextSkinEnable(activity)) {
             installLayoutFactory(activity);
             updateWindowBackground(activity);
+            if (activity instanceof SkinCompatSupportable) {
+                ((SkinCompatSupportable) activity).applySkin();
+            }
         }
     }
 
